@@ -1,0 +1,2 @@
+# Auserscript
+Adblocker
