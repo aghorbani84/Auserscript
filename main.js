@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Custom Ad Blocker for Persian Websites
 // @namespace    https://abolfazlghorbani84.ir
-// @version      0.5
+// @version      0.6
 // @description  Blocks ads and distractions on Persian websites, and other language in future.
 // @author       AbolfazlGhorbani
 // @match        *://*/*
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
 (function() {
@@ -16,7 +17,7 @@
         // CSS to hide ad elements, including common Persian ad classes
         const adStyles = `
             .ad, .advertisement, .ad-container, .sidebar-ad, .promo-banner,
-            .intrusive-ad, .banner-ad, .ad_slot, .ad-section, 
+            .intrusive-ad, .banner-ad, .ad_slot, .ad-section,
             .adsbox, .ads-container, .popup-ad, .adframe,
             .تبلیغات, .بنر-تبلیغاتی, .تبلیغ, .آگهی, #ad, #ads, #banner,
             .ad-banner, .google-ads, .sponsored, .sponsorship, .adsense,
@@ -38,7 +39,7 @@
         // Add a custom feature: Dark Mode toggle
         const darkModeButton = document.createElement('button');
         darkModeButton.id = 'dark-mode-toggle';
-        darkModeButton.textContent = 'تغییر به حالت تاریک';
+        darkModeButton.innerHTML = '🌙 حالت تاریک'; // آیکون ماه و متن
         darkModeButton.style.position = 'fixed';
         darkModeButton.style.bottom = '20px';
         darkModeButton.style.right = '20px';
@@ -46,13 +47,36 @@
         darkModeButton.style.backgroundColor = '#2196F3';
         darkModeButton.style.color = '#fff';
         darkModeButton.style.border = 'none';
-        darkModeButton.style.borderRadius = '5px';
+        darkModeButton.style.borderRadius = '25px'; // گوشه‌های گردتر
         darkModeButton.style.cursor = 'pointer';
         darkModeButton.style.zIndex = '9999';
+        darkModeButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.2)'; // سایه
+        darkModeButton.style.transition = 'all 0.3s ease'; // افکت transition
+        darkModeButton.style.fontFamily = 'Arial, sans-serif'; // فونت بهتر
+        darkModeButton.style.fontSize = '14px';
+
+        // افکت hover
+        darkModeButton.addEventListener('mouseenter', function() {
+            darkModeButton.style.backgroundColor = '#1e88e5';
+            darkModeButton.style.boxShadow = '0 6px 8px rgba(0, 0, 0, 0.3)';
+        });
+        darkModeButton.addEventListener('mouseleave', function() {
+            darkModeButton.style.backgroundColor = '#2196F3';
+            darkModeButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.2)';
+        });
+
         document.body.appendChild(darkModeButton);
 
+        // حالت تاریک
         darkModeButton.addEventListener('click', function() {
             document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeButton.innerHTML = '☀️ حالت روشن'; // آیکون خورشید و متن
+                darkModeButton.style.backgroundColor = '#FFA500'; // رنگ نارنجی برای حالت روشن
+            } else {
+                darkModeButton.innerHTML = '🌙 حالت تاریک'; // آیکون ماه و متن
+                darkModeButton.style.backgroundColor = '#2196F3'; // رنگ آبی برای حالت تاریک
+            }
         });
 
         // CSS for Dark Mode
@@ -71,10 +95,8 @@
         document.head.appendChild(darkStyle);
     }
 
-    // Run the modifyPage function when the DOM is fully loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        modifyPage();
-    });
+    // Run the modifyPage function directly
+    modifyPage();
 
     // Watch for dynamically added elements and apply modifications
     const observer = new MutationObserver(function(mutations) {
